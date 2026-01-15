@@ -9,20 +9,21 @@ function App() {
 
   // Fetch all toys on component mount
   useEffect(() => {
-    fetch("http://localhost:3000/toys")
+    fetch("http://localhost:3001/toys")
       .then((response) => response.json())
-      .then((data) => setToys(data))
+      .then((data) => {
+        console.log("Fetched toys:", data); // Debug log
+        setToys(data);
+      })
       .catch((error) => console.error("Error fetching toys:", error));
   }, []);
 
-  // Toggle form visibility
   function handleClick() {
     setShowForm((showForm) => !showForm);
   }
 
-  // Add new toy
   function addToy(newToy) {
-    fetch("http://localhost:3000/toys", {
+    fetch("http://localhost:3001/toys", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +35,6 @@ function App() {
       .catch((error) => console.error("Error adding toy:", error));
   }
 
-  // Delete toy
   function deleteToy(id) {
     fetch(`http://localhost:3001/toys/${id}`, {
       method: "DELETE",
@@ -45,7 +45,6 @@ function App() {
       .catch((error) => console.error("Error deleting toy:", error));
   }
 
-  // Like toy (increment likes)
   function likeToy(id) {
     const toy = toys.find((t) => t.id === id);
     const updatedLikes = toy.likes + 1;
@@ -59,11 +58,12 @@ function App() {
     })
       .then((response) => response.json())
       .then((updatedToy) => {
-        // Update state while maintaining toy order
         setToys(toys.map((t) => (t.id === id ? updatedToy : t)));
       })
       .catch((error) => console.error("Error liking toy:", error));
   }
+
+  console.log("Current toys state:", toys); // Debug log
 
   return (
     <>
